@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './GNB.module.scss';
-import SettingDropdown from '../ui/SettingDropdown';
-import MainMenuDropdown from '../ui/MainMenuDropdown';
+import SettingDropdown from './SettingDropdown';
+import MainMenuDropdown from './MainMenuDropdown';
 
 const GNB = () => {
   return (
