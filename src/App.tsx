@@ -1,5 +1,5 @@
+import { Outlet } from 'react-router-dom';
 import './App.css';
-import MainContent from './components/MainContent';
 import GNB from './components/nav/GNB';
 import SNB from './components/nav/SNB';
 
@@ -9,7 +9,7 @@ function App() {
       <GNB />
       <div className="mainArea">
         <SNB />
-        <MainContent />
+        <Outlet />
       </div>
     </>
   );
