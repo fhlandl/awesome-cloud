@@ -1,4 +1,4 @@
-class Node {
+class StorageNode {
   private name: string;
 
   private createdAt: Date;
@@ -9,4 +9,4 @@ class Node {
   }
 }
 
-export default Node;
+export default StorageNode;
