@@ -1,8 +1,8 @@
 import StorageNode from './StorageNode';
 
 class StorageFile extends StorageNode {
-  constructor(name: string) {
-    super(name);
+  constructor(name: string, parent: StorageNode | null) {
+    super(name, parent);
   }
 }
 

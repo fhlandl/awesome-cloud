@@ -4,8 +4,8 @@ import StorageNode from './StorageNode';
 class Directory extends StorageNode {
   private children: (Directory | StorageFile)[];
 
-  constructor(name: string) {
-    super(name);
+  constructor(name: string, parent: StorageNode | null) {
+    super(name, parent);
     this.children = [];
   }
 
