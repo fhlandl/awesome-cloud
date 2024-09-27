@@ -5,6 +5,8 @@ import './index.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import NotFound from './pages/NotFound.tsx';
 import Home from './pages/Home.tsx';
+import MyRoot from './pages/MyRoot.tsx';
+import Trash from './pages/Trash.tsx';
 
 const router = createBrowserRouter([
   {
@@ -13,7 +15,8 @@ const router = createBrowserRouter([
     errorElement: <NotFound />,
     children: [
       { index: true, path: '/', element: <Home /> },
-      { path: '/example', element: <h1>Example</h1> },
+      { path: '/root', element: <MyRoot /> },
+      { path: '/trash', element: <Trash /> },
     ],
   },
 ]);
