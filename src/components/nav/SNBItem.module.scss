@@ -1,0 +1,10 @@
+.item {
+  padding: 7px 5px;
+  text-align: left;
+  color: white;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #6a9c89;
+  }
+}
