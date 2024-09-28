@@ -1,33 +1,38 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import SpreadButton from '../ui/SpreadButton';
-import styles from './SNBItem.module.scss';
+import React from 'react';
+import TreeView, { INodeType } from './TreeView';
+import SNBItemContent from './SNBItemContent';
 
 export interface ISNBItemProps {
-  isHierarchy: boolean;
   title: string;
   location: string;
+  treeData?: INodeType[];
 }
 
+interface ITreeViewContentProps {
+  data: INodeType[];
+}
+
+const TreeViewContent = (props: ITreeViewContentProps) => {
+  return <TreeView data={props.data} />;
+};
+
+const NonTreeViewContent = (props: ISNBItemProps) => {
+  const { title, location } = props;
+
+  return <SNBItemContent title={title} location={location} />;
+};
+
 const SNBItem = (props: ISNBItemProps) => {
-  const { isHierarchy, title, location } = props;
-  const [active, setActive] = useState(false);
+  const { treeData } = props;
+
   return (
-    <div className={styles.item}>
-      <div className={styles.iconArea}>
-        {isHierarchy && (
-          <SpreadButton
-            active={active}
-            onClick={() => {
-              setActive(!active);
-            }}
-          />
-        )}
-      </div>
-      <Link to={location} className={styles.link}>
-        <span className={styles.itemTitle}>{title}</span>
-      </Link>
-    </div>
+    <>
+      {treeData ? (
+        <TreeViewContent data={treeData} />
+      ) : (
+        <NonTreeViewContent {...props} />
+      )}
+    </>
   );
 };
 

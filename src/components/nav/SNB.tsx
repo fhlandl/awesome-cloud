@@ -2,10 +2,36 @@ import React from 'react';
 import SNBItem, { ISNBItemProps } from './SNBItem';
 import styles from './SNB.module.scss';
 
+const treeData = [
+  {
+    id: '1',
+    title: 'My Root',
+    children: [
+      {
+        id: '1-1',
+        title: 'Child 1',
+        children: [
+          { id: '1-1-1', title: 'Grandchild 1-1-1' },
+          { id: '1-1-2', title: 'Grandchild 1-1-2' },
+        ],
+      },
+      {
+        id: '1-2',
+        title: 'Child 2',
+        children: [{ id: '1-2-1', title: 'Grandchild 1-2-1' }],
+      },
+    ],
+  },
+];
+
 const itemList: ISNBItemProps[] = [
-  { isHierarchy: true, title: 'Home', location: '/' },
-  { isHierarchy: true, title: 'My Root', location: '/root' },
-  { isHierarchy: false, title: 'Trash', location: '/trash' },
+  { title: 'Home', location: '/' },
+  {
+    title: 'My Root',
+    location: '/root',
+    treeData: treeData,
+  },
+  { title: 'Trash', location: '/trash' },
 ];
 
 const SNB = () => {
@@ -13,13 +39,9 @@ const SNB = () => {
     <aside className={styles.aside}>
       <nav className={styles.nav}>
         {itemList.map((item) => {
-          const { isHierarchy, title, location } = item;
+          const { title, location, treeData } = item;
           return (
-            <SNBItem
-              isHierarchy={isHierarchy}
-              title={title}
-              location={location}
-            />
+            <SNBItem title={title} location={location} treeData={treeData} />
           );
         })}
       </nav>
