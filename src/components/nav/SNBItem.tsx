@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import SpreadButton from '../ui/SpreadButton';
 import styles from './SNBItem.module.scss';
 
 export interface ISNBItemProps {
@@ -8,24 +9,25 @@ export interface ISNBItemProps {
   location: string;
 }
 
-const SNBItem: React.FC<ISNBItemProps> = (props) => {
+const SNBItem = (props: ISNBItemProps) => {
   const { isHierarchy, title, location } = props;
+  const [active, setActive] = useState(false);
   return (
-    <Link to={location}>
-      <div className={styles.item}>
+    <div className={styles.item}>
+      <div className={styles.iconArea}>
         {isHierarchy && (
-          <div>
-            <span>h </span>
-            <span>{title}</span>
-          </div>
-        )}
-        {!isHierarchy && (
-          <div>
-            <span>{title}</span>
-          </div>
+          <SpreadButton
+            active={active}
+            onClick={() => {
+              setActive(!active);
+            }}
+          />
         )}
       </div>
-    </Link>
+      <Link to={location} className={styles.link}>
+        <span className={styles.itemTitle}>{title}</span>
+      </Link>
+    </div>
   );
 };
 
