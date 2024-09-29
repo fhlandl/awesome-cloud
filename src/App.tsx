@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import './App.css';
-import GNB from './components/nav/GNB';
-import SNB from './components/nav/SNB';
+import GNB from './components/nav/gnb/GNB';
+import SNB from './components/nav/snb/SNB';
 
 function App() {
   return (

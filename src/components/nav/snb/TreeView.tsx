@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import SpreadButton from '../ui/SpreadButton';
+import SpreadButton from '../../ui/SpreadButton';
 import SNBItemContent from './SNBItemContent';
 import styles from './TreeView.module.scss';
 
