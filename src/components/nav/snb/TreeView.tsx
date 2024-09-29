@@ -7,7 +7,7 @@ type NodeId = string;
 
 export interface INodeType {
   id: NodeId;
-  title: string;
+  name: string;
   children?: INodeType[];
 }
 
@@ -22,8 +22,13 @@ interface ITreeViewProps {
   data: INodeType[];
 }
 
+const ROOT_PATH = '/drive/root';
+const DIR_PATH = '/drive/dirs';
+
 const TreeNode = (props: INodeProps) => {
   const { node, depth, expandedNodes, toggleNode } = props;
+  const isRoot = depth === 1;
+  const location = isRoot ? ROOT_PATH : `${DIR_PATH}/${node.id}`;
   const expanded = expandedNodes.has(node.id);
 
   const indent = depth - 1;
@@ -35,8 +40,8 @@ const TreeNode = (props: INodeProps) => {
   return (
     <div className={styles.node}>
       <SNBItemContent
-        title={node.title}
-        location="/root"
+        title={node.name}
+        location={location}
         indentStyle={indentStyle}
       >
         <SpreadButton

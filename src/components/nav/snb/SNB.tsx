@@ -5,20 +5,20 @@ import styles from './SNB.module.scss';
 const treeData = [
   {
     id: '1',
-    title: 'My Root',
+    name: 'My Root',
     children: [
       {
         id: '1-1',
-        title: 'Child 1',
+        name: 'Child 1',
         children: [
-          { id: '1-1-1', title: 'Grandchild 1-1-1' },
-          { id: '1-1-2', title: 'Grandchild 1-1-2' },
+          { id: '1-1-1', name: 'Grandchild 1-1-1' },
+          { id: '1-1-2', name: 'Grandchild 1-1-2' },
         ],
       },
       {
         id: '1-2',
-        title: 'Child 2',
-        children: [{ id: '1-2-1', title: 'Grandchild 1-2-1' }],
+        name: 'Child 2',
+        children: [{ id: '1-2-1', name: 'Grandchild 1-2-1' }],
       },
     ],
   },
@@ -28,7 +28,7 @@ const itemList: ISNBItemProps[] = [
   { title: 'Home', location: '/' },
   {
     title: 'My Root',
-    location: '/root',
+    location: '/drive',
     treeData: treeData,
   },
   { title: 'Trash', location: '/trash' },
