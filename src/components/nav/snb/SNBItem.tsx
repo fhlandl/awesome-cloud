@@ -1,19 +1,18 @@
 import React from 'react';
-import TreeView, { INodeType } from './TreeView';
+import TreeView from './TreeView';
 import SNBItemContent from './SNBItemContent';
+import { INodeType } from '../../../types/TreeViewTypes';
 
 export interface ISNBItemProps {
   title: string;
   location: string;
-  treeData?: INodeType[];
+  treeRoot?: INodeType;
 }
 
-interface ITreeViewContentProps {
-  data: INodeType[];
-}
-
-const TreeViewContent = (props: ITreeViewContentProps) => {
-  return <TreeView data={props.data} />;
+const TreeViewContent = (props: ISNBItemProps) => {
+  const { title, treeRoot } = props;
+  treeRoot!.name = title;
+  return <TreeView root={treeRoot!} />;
 };
 
 const NonTreeViewContent = (props: ISNBItemProps) => {
@@ -23,12 +22,10 @@ const NonTreeViewContent = (props: ISNBItemProps) => {
 };
 
 const SNBItem = (props: ISNBItemProps) => {
-  const { treeData } = props;
-
   return (
     <>
-      {treeData ? (
-        <TreeViewContent data={treeData} />
+      {props.treeRoot ? (
+        <TreeViewContent {...props} />
       ) : (
         <NonTreeViewContent {...props} />
       )}

@@ -2,14 +2,8 @@ import React, { useState } from 'react';
 import SpreadButton from '../../ui/SpreadButton';
 import SNBItemContent from './SNBItemContent';
 import styles from './TreeView.module.scss';
-
-type NodeId = string;
-
-export interface INodeType {
-  id: NodeId;
-  name: string;
-  children?: INodeType[];
-}
+import { NodeId } from '../../../types/StorageTypes';
+import { INodeType } from '../../../types/TreeViewTypes';
 
 interface INodeProps {
   node: INodeType;
@@ -19,7 +13,7 @@ interface INodeProps {
 }
 
 interface ITreeViewProps {
-  data: INodeType[];
+  root: INodeType;
 }
 
 const ROOT_PATH = '/drive/root';
@@ -54,7 +48,7 @@ const TreeNode = (props: INodeProps) => {
       {expanded &&
         node.children?.map((child) => (
           <TreeNode
-            key={child.id}
+            key={`tree-node-${child.id}`}
             node={child}
             depth={depth + 1}
             expandedNodes={expandedNodes}
@@ -66,7 +60,7 @@ const TreeNode = (props: INodeProps) => {
 };
 
 const TreeView = (props: ITreeViewProps) => {
-  const { data } = props;
+  const { root } = props;
   const [expandedNodes, setExpandedNodes] = useState<Set<NodeId>>(new Set());
 
   const toggleNode = (id: NodeId) => {
@@ -87,15 +81,13 @@ const TreeView = (props: ITreeViewProps) => {
 
   return (
     <div className={styles.tree}>
-      {data.map((node) => (
-        <TreeNode
-          key={node.id}
-          node={node}
-          depth={1}
-          expandedNodes={expandedNodes}
-          toggleNode={toggleNode}
-        />
-      ))}
+      <TreeNode
+        key={`tree-node-${root.id}`}
+        node={root}
+        depth={1}
+        expandedNodes={expandedNodes}
+        toggleNode={toggleNode}
+      />
     </div>
   );
 };
