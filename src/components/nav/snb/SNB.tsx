@@ -1,7 +1,8 @@
 import React from 'react';
 import SNBItem, { ISNBItemProps } from './SNBItem';
 import styles from './SNB.module.scss';
-import { useFileSystemContext } from '../../../context/FileSystemContext';
+import { observer } from 'mobx-react-lite';
+import useFileSystemContext from '../../../context/useFileSystemContext';
 
 const itemList: ISNBItemProps[] = [
   { title: 'Home', location: '/' },
@@ -13,9 +14,9 @@ const itemList: ISNBItemProps[] = [
 ];
 
 const SNB = () => {
-  const { storageRoot } = useFileSystemContext();
+  const cloudStorage = useFileSystemContext();
 
-  itemList[1].treeRoot = storageRoot; // ToDo: remove hard coding index
+  itemList[1].treeRoot = cloudStorage.getRoot(); // ToDo: remove hard coding index
 
   return (
     <aside className={styles.aside}>
@@ -36,4 +37,4 @@ const SNB = () => {
   );
 };
 
-export default SNB;
+export default observer(SNB);

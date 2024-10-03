@@ -1,24 +1,14 @@
-import React, {
-  ReactNode,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
-import { INodeType } from '../types/TreeViewTypes';
+import React, { ReactNode, createContext, useEffect } from 'react';
 import { convertDBDataToTreeData } from '../util/StorageUtil';
-import { ROOT_ID, ROOT_NAME } from '../types/StorageTypes';
+import CloudStorage from '../store/CloudStorage';
 
 interface IProps {
   children: ReactNode;
 }
 
-interface IContextType {
-  storageRoot: INodeType;
-  setStorageRoot: React.Dispatch<React.SetStateAction<INodeType>>;
-}
-
-const FileSystemContext = createContext<IContextType>({} as IContextType);
+export const FileSystemContext = createContext<CloudStorage>(
+  {} as CloudStorage
+);
 
 const sampleData = [
   { id: 5, name: 'name5', parentId: 2 },
@@ -34,20 +24,17 @@ const sampleData = [
 const wait = (timeToDelay: number) =>
   new Promise((resolve) => setTimeout(resolve, timeToDelay));
 
+const cloudStorage = new CloudStorage();
+
 export const FileSystemProvider = (props: IProps) => {
   const { children } = props;
-  const [storageRoot, setStorageRoot] = useState<INodeType>({
-    id: ROOT_ID,
-    name: ROOT_NAME,
-    children: [],
-  });
 
   useEffect(() => {
     const fetchData = async () => {
       console.log('fetching...');
       await wait(3000);
-      const data = convertDBDataToTreeData(sampleData);
-      setStorageRoot(data);
+      const root = convertDBDataToTreeData(sampleData);
+      cloudStorage.update(root);
       console.log('fetched...');
     };
 
@@ -55,12 +42,8 @@ export const FileSystemProvider = (props: IProps) => {
   }, []);
 
   return (
-    <FileSystemContext.Provider value={{ storageRoot, setStorageRoot }}>
+    <FileSystemContext.Provider value={cloudStorage}>
       {children}
     </FileSystemContext.Provider>
   );
-};
-
-export const useFileSystemContext = () => {
-  return useContext(FileSystemContext);
 };
