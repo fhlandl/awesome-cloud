@@ -12,7 +12,7 @@ export function convertDBDataToTreeData(
   records: IStorageDBRecord[]
 ): INodeType {
   const nodes: NodeMap = new Map();
-  const rootNode = { id: ROOT_ID, name: ROOT_NAME, children: [] };
+  let rootNode: INodeType = { id: ROOT_ID, name: ROOT_NAME, children: [] };
 
   records.forEach((record) => {
     nodes.set(record.id, { id: record.id, name: record.name, children: [] });
@@ -25,10 +25,40 @@ export function convertDBDataToTreeData(
     parentNode?.children?.push(node);
   });
 
-  // ToDo: sorting
+  rootNode = sortTree(rootNode);
 
   return rootNode;
 }
+
+function sortTree(node: INodeType): INodeType {
+  const sortedChildren = node.children
+    ? node.children
+        .sort((l, r) => {
+          return l.name < r.name ? -1 : l.name > r.name ? 1 : 0;
+        })
+        .map((child) => sortTree(child))
+    : [];
+
+  return {
+    ...node,
+    children: sortedChildren,
+  };
+}
+
+// function sortTree(node: INodeType): void {
+//   const queue = [node];
+
+//   while (queue && queue.length > 0) {
+//     const target = queue.shift();
+//     target?.children?.sort((l, r) => {
+//       return l.name < r.name ? -1 : l.name > r.name ? 1 : 0;
+//     });
+
+//     if (target?.children) {
+//       queue.push(...target.children);
+//     }
+//   }
+// }
 
 export function printTreeNode(node: INodeType, depth: number = 0): void {
   const { id, name, children } = node;
