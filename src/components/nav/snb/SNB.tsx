@@ -14,7 +14,7 @@ const itemList: ISNBItemProps[] = [
 ];
 
 const SNB = () => {
-  const cloudStorage = useFileSystemContext();
+  const { cloudStorage } = useFileSystemContext();
 
   itemList[1].treeRoot = cloudStorage.getRoot(); // ToDo: remove hard coding index
 
