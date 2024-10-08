@@ -21,6 +21,9 @@ const DIR_PATH = '/drive/dirs';
 
 const TreeNode = (props: INodeProps) => {
   const { node, depth, expandedNodes, toggleNode } = props;
+  const isFile = node.dType === 'F';
+  if (isFile) return <></>;
+
   const isRoot = depth === 1;
   const location = isRoot ? ROOT_PATH : `${DIR_PATH}/${node.id}`;
   const expanded = expandedNodes.has(node.id);

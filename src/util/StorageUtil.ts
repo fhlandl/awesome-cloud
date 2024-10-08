@@ -12,10 +12,20 @@ export function convertDBDataToTreeData(
   records: IStorageDBRecord[]
 ): INodeType {
   const nodes: NodeMap = new Map();
-  let rootNode: INodeType = { id: ROOT_ID, name: ROOT_NAME, children: [] };
+  let rootNode: INodeType = {
+    id: ROOT_ID,
+    name: ROOT_NAME,
+    dType: 'D',
+    children: [],
+  };
 
   records.forEach((record) => {
-    nodes.set(record.id, { id: record.id, name: record.name, children: [] });
+    nodes.set(record.id, {
+      id: record.id,
+      name: record.name,
+      dType: record.dType,
+      children: [],
+    });
   });
 
   records.forEach((record) => {
@@ -61,9 +71,9 @@ function sortTree(node: INodeType): INodeType {
 // }
 
 export function printTreeNode(node: INodeType, depth: number = 0): void {
-  const { id, name, children } = node;
+  const { id, name, dType, children } = node;
   const indent = '  '.repeat(depth);
-  console.log(`${indent}id: ${id}, name: ${name}`);
+  console.log(`${indent}id: ${id}, name: ${name}, dType: ${dType}`);
   children?.forEach((child) => {
     printTreeNode(child, depth + 1);
   });

@@ -7,6 +7,7 @@ export const ROOT_NAME = 'root';
 export interface IStorageDBRecord {
   id: NodeId;
   name: string;
+  dType: string;
   parentId: NodeId | null;
   userId?: number;
   path?: string;
