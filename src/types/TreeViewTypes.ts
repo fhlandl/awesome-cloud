@@ -1,8 +1,6 @@
-import { NodeId } from './StorageTypes';
+import { StorageNodeId } from './StorageTypes';
+import { ITreeNode } from './tree/TreeTypes';
 
-export interface INodeType {
-  id: NodeId;
-  name: string;
+export interface IStorageNode extends ITreeNode<StorageNodeId> {
   dType: string;
-  children?: INodeType[];
 }

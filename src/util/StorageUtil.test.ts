@@ -14,7 +14,9 @@ describe('StorageUtil Test', () => {
       { id: 8, name: 'name8', parentId: 6, dType: 'D' },
     ];
 
-    const rootNode = convertDBDataToTreeData(dbData);
+    const rootNode = convertDBDataToTreeData(dbData, -1, 'root', {
+      dType: 'D',
+    });
     printTreeNode(rootNode);
   });
 
@@ -30,7 +32,25 @@ describe('StorageUtil Test', () => {
       { id: 4, name: 'name4', parentId: 1, dType: 'D' },
     ];
 
-    const rootNode = convertDBDataToTreeData(dbData);
+    const rootNode = convertDBDataToTreeData(dbData, -1, 'root', {
+      dType: 'D',
+    });
+    printTreeNode(rootNode);
+  });
+
+  test('convertDBDataToTreeData - not sorted pure node input', () => {
+    const dbData = [
+      { id: 5, name: 'name5', parentId: 2 },
+      { id: 2, name: 'name2', parentId: null },
+      { id: 8, name: 'name8', parentId: 6 },
+      { id: 1, name: 'name1', parentId: null },
+      { id: 3, name: 'name3', parentId: 1 },
+      { id: 6, name: 'name6', parentId: 2 },
+      { id: 7, name: 'name7', parentId: 3 },
+      { id: 4, name: 'name4', parentId: 1 },
+    ];
+
+    const rootNode = convertDBDataToTreeData(dbData, -1, 'root');
     printTreeNode(rootNode);
   });
 });

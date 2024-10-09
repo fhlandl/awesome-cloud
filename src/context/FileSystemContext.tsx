@@ -2,6 +2,8 @@ import React, { ReactNode, createContext, useEffect } from 'react';
 import { convertDBDataToTreeData } from '../util/StorageUtil';
 import CloudStorage from '../store/CloudStorage';
 import useStorageRepository from './useStorageRepository';
+import { ROOT_ID, ROOT_NAME } from '../types/StorageTypes';
+import { IStorageNode } from '../types/TreeViewTypes';
 
 interface IProps {
   children: ReactNode;
@@ -39,7 +41,9 @@ export const FileSystemProvider = (props: IProps) => {
     const fetchData = async () => {
       console.log('fetching...');
       const { fileSystem } = await storageRepository.fetchData();
-      const root = convertDBDataToTreeData(fileSystem);
+      const root = convertDBDataToTreeData(fileSystem, ROOT_ID, ROOT_NAME, {
+        dType: 'D',
+      }) as IStorageNode;
       cloudStorage.update(root);
       console.log('fetched...');
     };

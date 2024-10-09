@@ -1,10 +1,10 @@
 import { action, makeObservable, observable } from 'mobx';
 import { ROOT_ID, ROOT_NAME } from '../types/StorageTypes';
-import { INodeType } from '../types/TreeViewTypes';
+import { IStorageNode } from '../types/TreeViewTypes';
 
 class CloudStorage {
   @observable
-  private root: INodeType;
+  private root: IStorageNode;
 
   constructor() {
     makeObservable(this);
@@ -12,15 +12,16 @@ class CloudStorage {
       id: ROOT_ID,
       name: ROOT_NAME,
       children: [],
+      dType: 'D',
     };
   }
 
   @action
-  public update(root: INodeType): void {
+  public update(root: IStorageNode): void {
     this.root = root;
   }
 
-  public getRoot(): INodeType {
+  public getRoot(): IStorageNode {
     return this.root;
   }
 }

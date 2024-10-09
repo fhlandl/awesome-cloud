@@ -1,38 +1,40 @@
-import {
-  IStorageDBRecord,
+import { ITreeNodeRecord } from '../types/tree/TreeRecordTypes';
+import { ITreeNode } from '../types/tree/TreeTypes';
+
+export function convertDBDataToTreeData<
   NodeId,
-  ROOT_ID,
-  ROOT_NAME,
-} from '../types/StorageTypes';
-import { INodeType } from '../types/TreeViewTypes';
-
-type NodeMap = Map<NodeId, INodeType>;
-
-export function convertDBDataToTreeData(
-  records: IStorageDBRecord[]
-): INodeType {
-  const nodes: NodeMap = new Map();
-  let rootNode: INodeType = {
-    id: ROOT_ID,
-    name: ROOT_NAME,
-    dType: 'D',
+  RecordType extends ITreeNodeRecord<NodeId>,
+  NodeType extends ITreeNode<NodeId>
+>(
+  records: RecordType[],
+  rootId: NodeId,
+  rootName: string,
+  rootProps?: Omit<NodeType, 'id' | 'name' | 'children'>
+): NodeType {
+  const nodes: Map<NodeId, NodeType> = new Map();
+  let rootNode: NodeType = {
+    id: rootId,
+    name: rootName,
+    // dType: 'D',
     children: [],
-  };
+    ...rootProps,
+  } as unknown as NodeType;
 
   records.forEach((record) => {
-    nodes.set(record.id, {
-      id: record.id,
-      name: record.name,
-      dType: record.dType,
+    const { id, name, parentId, ...others } = record;
+    nodes.set(id, {
+      id,
+      name,
       children: [],
-    });
+      ...others,
+    } as unknown as NodeType);
   });
 
   records.forEach((record) => {
     const { id, parentId } = record;
     const node = nodes.get(id)!;
     const parentNode = parentId === null ? rootNode : nodes.get(parentId);
-    parentNode?.children?.push(node);
+    parentNode?.children.push(node);
   });
 
   rootNode = sortTree(rootNode);
@@ -40,7 +42,9 @@ export function convertDBDataToTreeData(
   return rootNode;
 }
 
-function sortTree(node: INodeType): INodeType {
+function sortTree<NodeId, NodeType extends ITreeNode<NodeId>>(
+  node: NodeType
+): NodeType {
   const sortedChildren = node.children
     ? node.children
         .sort((l, r) => {
@@ -70,10 +74,18 @@ function sortTree(node: INodeType): INodeType {
 //   }
 // }
 
-export function printTreeNode(node: INodeType, depth: number = 0): void {
-  const { id, name, dType, children } = node;
+export function printTreeNode<NodeId, NodeType extends ITreeNode<NodeId>>(
+  node: NodeType,
+  depth: number = 0
+): void {
+  const { id, name, children, ...others } = node;
   const indent = '  '.repeat(depth);
-  console.log(`${indent}id: ${id}, name: ${name}, dType: ${dType}`);
+  let propString = '';
+  for (const prop in others as Record<keyof typeof others, unknown>) {
+    const key = prop as keyof typeof others;
+    propString += `, ${prop}: ${others[key]}`;
+  }
+  console.log(`${indent}id: ${id}, name: ${name} ${propString}`);
   children?.forEach((child) => {
     printTreeNode(child, depth + 1);
   });
