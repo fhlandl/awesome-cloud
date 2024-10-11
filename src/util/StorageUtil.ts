@@ -1,40 +1,36 @@
 import { ITreeNodeRecord } from '../types/tree/TreeRecordTypes';
 import { ITreeNode } from '../types/tree/TreeTypes';
 
-export function convertDBDataToTreeData<
+export function convertDBRecordsToTreeNode<
   NodeId,
   RecordType extends ITreeNodeRecord<NodeId>,
   NodeType extends ITreeNode<NodeId>
->(
-  records: RecordType[],
-  rootId: NodeId,
-  rootName: string,
-  rootProps?: Omit<NodeType, 'id' | 'name' | 'children'>
-): NodeType {
+>(records: RecordType[]): NodeType {
   const nodes: Map<NodeId, NodeType> = new Map();
-  let rootNode: NodeType = {
-    id: rootId,
-    name: rootName,
-    // dType: 'D',
-    children: [],
-    ...rootProps,
-  } as unknown as NodeType;
+
+  let rootNode: NodeType = {} as NodeType;
 
   records.forEach((record) => {
     const { id, name, parentId, ...others } = record;
-    nodes.set(id, {
+    const node = {
       id,
       name,
       children: [],
       ...others,
-    } as unknown as NodeType);
+    } as unknown as NodeType;
+    nodes.set(id, node);
+    if (parentId === null) {
+      rootNode = node;
+    }
   });
 
   records.forEach((record) => {
     const { id, parentId } = record;
-    const node = nodes.get(id)!;
-    const parentNode = parentId === null ? rootNode : nodes.get(parentId);
-    parentNode?.children.push(node);
+    if (parentId !== null) {
+      const node = nodes.get(id)!;
+      const parentNode = nodes.get(parentId);
+      parentNode?.children.push(node);
+    }
   });
 
   rootNode = sortTree(rootNode);

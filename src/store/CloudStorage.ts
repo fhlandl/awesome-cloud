@@ -1,6 +1,5 @@
 import { action, makeObservable, observable } from 'mobx';
-import { ROOT_ID, ROOT_NAME } from '../types/StorageTypes';
-import { IStorageNode } from '../types/TreeViewTypes';
+import { IStorageNode, ROOT_ID, ROOT_NAME } from '../types/StorageTypes';
 
 class CloudStorage {
   @observable

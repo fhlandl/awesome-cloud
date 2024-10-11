@@ -3,7 +3,7 @@ import SpreadButton from '../../ui/SpreadButton';
 import SNBItemContent from './SNBItemContent';
 import styles from './TreeView.module.scss';
 import { StorageNodeId } from '../../../types/StorageTypes';
-import { IStorageNode } from '../../../types/TreeViewTypes';
+import { IStorageNode } from '../../../types/StorageTypes';
 
 interface INodeProps {
   node: IStorageNode;
