@@ -16,7 +16,6 @@ interface ITreeViewProps {
   root: IStorageNode;
 }
 
-const ROOT_PATH = '/drive/root';
 const DIR_PATH = '/drive/dirs';
 
 const TreeNode = (props: INodeProps) => {
@@ -24,8 +23,7 @@ const TreeNode = (props: INodeProps) => {
   const isFile = node.dType === 'F';
   if (isFile) return <></>;
 
-  const isRoot = depth === 1;
-  const location = isRoot ? ROOT_PATH : `${DIR_PATH}/${node.id}`;
+  const location = `${DIR_PATH}/${node.id}`;
   const expanded = expandedNodes.has(node.id);
 
   const indent = depth - 1;

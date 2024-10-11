@@ -33,26 +33,54 @@ export function convertDBRecordsToTreeNode<
     }
   });
 
-  rootNode = sortTree(rootNode);
+  rootNode = sortTree(rootNode, [sortByDataType, sortByName]);
 
   return rootNode;
 }
 
+type SortFunctionType = <NodeId, NodeType extends ITreeNode<NodeId>>(
+  l: NodeType,
+  r: NodeType
+) => 1 | -1 | 0;
+
 function sortTree<NodeId, NodeType extends ITreeNode<NodeId>>(
-  node: NodeType
+  node: NodeType,
+  sortFunctions: SortFunctionType[]
 ): NodeType {
   const sortedChildren = node.children
     ? node.children
         .sort((l, r) => {
-          return l.name < r.name ? -1 : l.name > r.name ? 1 : 0;
+          for (const sortFunc of sortFunctions) {
+            const compared = sortFunc(l, r);
+            if (compared !== 0) return compared;
+          }
+          return 0;
         })
-        .map((child) => sortTree(child))
+        .map((child) => sortTree(child, sortFunctions))
     : [];
 
   return {
     ...node,
     children: sortedChildren,
   };
+}
+
+function sortByName<NodeId, NodeType extends ITreeNode<NodeId>>(
+  l: NodeType,
+  r: NodeType
+): 1 | -1 | 0 {
+  return l.name < r.name ? -1 : l.name > r.name ? 1 : 0;
+}
+
+function sortByDataType<NodeId, NodeType extends ITreeNode<NodeId>>(
+  l: NodeType,
+  r: NodeType
+): 1 | -1 | 0 {
+  if ('dType' in l && 'dType' in r) {
+    if (l.dType === 'D' && r.dType === 'F') return -1;
+    if (l.dType === 'F' && r.dType === 'D') return 1;
+  }
+  return 0;
 }
 
 // function sortTree(node: INodeType): void {

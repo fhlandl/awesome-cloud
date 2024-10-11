@@ -12,10 +12,13 @@ export interface IStorageNodeRecord extends ITreeNodeRecord<StorageNodeId> {
   userId?: number;
   path?: string;
   createdAt?: string;
-  lastModifiedAt?: string;
+  lastModifiedAt: string;
+  userName: string;
 }
 
 export interface IStorageNode extends ITreeNode<StorageNodeId> {
   children: IStorageNode[];
   dType: string;
+  lastModifiedAt: string;
+  userName: string;
 }
