@@ -1,5 +1,10 @@
 import { action, makeObservable, observable } from 'mobx';
-import { IStorageNode, ROOT_ID, ROOT_NAME } from '../types/StorageTypes';
+import {
+  IStorageNode,
+  ROOT_ID,
+  ROOT_NAME,
+  StorageNodeId,
+} from '../types/StorageTypes';
 
 class CloudStorage {
   @observable
@@ -22,6 +27,28 @@ class CloudStorage {
 
   public getRoot(): IStorageNode {
     return this.root;
+  }
+
+  public findNodeById(nodeId: StorageNodeId): IStorageNode | null {
+    return this.findNodeImpl(this.root, nodeId);
+  }
+
+  private findNodeImpl(
+    node: IStorageNode,
+    nodeId: StorageNodeId
+  ): IStorageNode | null {
+    if (node.id === nodeId) {
+      return node;
+    }
+
+    for (const child of node.children) {
+      const result = this.findNodeImpl(child, nodeId);
+      if (result !== null) {
+        return result;
+      }
+    }
+
+    return null;
   }
 }
 
