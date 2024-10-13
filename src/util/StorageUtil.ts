@@ -1,58 +1,86 @@
-import {
-  IStorageDBRecord,
+import { ITreeNodeRecord } from '../types/tree/TreeRecordTypes';
+import { ITreeNode } from '../types/tree/TreeTypes';
+
+export function convertDBRecordsToTreeNode<
   NodeId,
-  ROOT_ID,
-  ROOT_NAME,
-} from '../types/StorageTypes';
-import { INodeType } from '../types/TreeViewTypes';
+  RecordType extends ITreeNodeRecord<NodeId>,
+  NodeType extends ITreeNode<NodeId>
+>(records: RecordType[]): NodeType {
+  const nodes: Map<NodeId, NodeType> = new Map();
 
-type NodeMap = Map<NodeId, INodeType>;
-
-export function convertDBDataToTreeData(
-  records: IStorageDBRecord[]
-): INodeType {
-  const nodes: NodeMap = new Map();
-  let rootNode: INodeType = {
-    id: ROOT_ID,
-    name: ROOT_NAME,
-    dType: 'D',
-    children: [],
-  };
+  let rootNode: NodeType = {} as NodeType;
 
   records.forEach((record) => {
-    nodes.set(record.id, {
-      id: record.id,
-      name: record.name,
-      dType: record.dType,
+    const { id, name, parentId, ...others } = record;
+    const node = {
+      id,
+      name,
       children: [],
-    });
+      ...others,
+    } as unknown as NodeType;
+    nodes.set(id, node);
+    if (parentId === null) {
+      rootNode = node;
+    }
   });
 
   records.forEach((record) => {
     const { id, parentId } = record;
-    const node = nodes.get(id)!;
-    const parentNode = parentId === null ? rootNode : nodes.get(parentId);
-    parentNode?.children?.push(node);
+    if (parentId !== null) {
+      const node = nodes.get(id)!;
+      const parentNode = nodes.get(parentId);
+      parentNode?.children.push(node);
+    }
   });
 
-  rootNode = sortTree(rootNode);
+  rootNode = sortTree(rootNode, [sortByDataType, sortByName]);
 
   return rootNode;
 }
 
-function sortTree(node: INodeType): INodeType {
+type SortFunctionType = <NodeId, NodeType extends ITreeNode<NodeId>>(
+  l: NodeType,
+  r: NodeType
+) => 1 | -1 | 0;
+
+function sortTree<NodeId, NodeType extends ITreeNode<NodeId>>(
+  node: NodeType,
+  sortFunctions: SortFunctionType[]
+): NodeType {
   const sortedChildren = node.children
     ? node.children
         .sort((l, r) => {
-          return l.name < r.name ? -1 : l.name > r.name ? 1 : 0;
+          for (const sortFunc of sortFunctions) {
+            const compared = sortFunc(l, r);
+            if (compared !== 0) return compared;
+          }
+          return 0;
         })
-        .map((child) => sortTree(child))
+        .map((child) => sortTree(child, sortFunctions))
     : [];
 
   return {
     ...node,
     children: sortedChildren,
   };
+}
+
+function sortByName<NodeId, NodeType extends ITreeNode<NodeId>>(
+  l: NodeType,
+  r: NodeType
+): 1 | -1 | 0 {
+  return l.name < r.name ? -1 : l.name > r.name ? 1 : 0;
+}
+
+function sortByDataType<NodeId, NodeType extends ITreeNode<NodeId>>(
+  l: NodeType,
+  r: NodeType
+): 1 | -1 | 0 {
+  if ('dType' in l && 'dType' in r) {
+    if (l.dType === 'D' && r.dType === 'F') return -1;
+    if (l.dType === 'F' && r.dType === 'D') return 1;
+  }
+  return 0;
 }
 
 // function sortTree(node: INodeType): void {
@@ -70,10 +98,18 @@ function sortTree(node: INodeType): INodeType {
 //   }
 // }
 
-export function printTreeNode(node: INodeType, depth: number = 0): void {
-  const { id, name, dType, children } = node;
+export function printTreeNode<NodeId, NodeType extends ITreeNode<NodeId>>(
+  node: NodeType,
+  depth: number = 0
+): void {
+  const { id, name, children, ...others } = node;
   const indent = '  '.repeat(depth);
-  console.log(`${indent}id: ${id}, name: ${name}, dType: ${dType}`);
+  let propString = '';
+  for (const prop in others as Record<keyof typeof others, unknown>) {
+    const key = prop as keyof typeof others;
+    propString += `, ${prop}: ${others[key]}`;
+  }
+  console.log(`${indent}id: ${id}, name: ${name} ${propString}`);
   children?.forEach((child) => {
     printTreeNode(child, depth + 1);
   });

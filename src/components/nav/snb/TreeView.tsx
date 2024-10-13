@@ -2,21 +2,20 @@ import React, { useState } from 'react';
 import SpreadButton from '../../ui/SpreadButton';
 import SNBItemContent from './SNBItemContent';
 import styles from './TreeView.module.scss';
-import { NodeId } from '../../../types/StorageTypes';
-import { INodeType } from '../../../types/TreeViewTypes';
+import { StorageNodeId } from '../../../types/StorageTypes';
+import { IStorageNode } from '../../../types/StorageTypes';
 
 interface INodeProps {
-  node: INodeType;
+  node: IStorageNode;
   depth: number;
-  expandedNodes: Set<NodeId>;
-  toggleNode: (id: NodeId) => void;
+  expandedNodes: Set<StorageNodeId>;
+  toggleNode: (id: StorageNodeId) => void;
 }
 
 interface ITreeViewProps {
-  root: INodeType;
+  root: IStorageNode;
 }
 
-const ROOT_PATH = '/drive/root';
 const DIR_PATH = '/drive/dirs';
 
 const TreeNode = (props: INodeProps) => {
@@ -24,8 +23,7 @@ const TreeNode = (props: INodeProps) => {
   const isFile = node.dType === 'F';
   if (isFile) return <></>;
 
-  const isRoot = depth === 1;
-  const location = isRoot ? ROOT_PATH : `${DIR_PATH}/${node.id}`;
+  const location = `${DIR_PATH}/${node.id}`;
   const expanded = expandedNodes.has(node.id);
 
   const indent = depth - 1;
@@ -64,9 +62,11 @@ const TreeNode = (props: INodeProps) => {
 
 const TreeView = (props: ITreeViewProps) => {
   const { root } = props;
-  const [expandedNodes, setExpandedNodes] = useState<Set<NodeId>>(new Set());
+  const [expandedNodes, setExpandedNodes] = useState<Set<StorageNodeId>>(
+    new Set()
+  );
 
-  const toggleNode = (id: NodeId) => {
+  const toggleNode = (id: StorageNodeId) => {
     if (expandedNodes.has(id)) {
       setExpandedNodes((prev) => {
         const newSet = new Set(prev);

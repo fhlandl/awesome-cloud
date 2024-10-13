@@ -5,7 +5,6 @@ import './index.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import NotFound from './pages/NotFound.tsx';
 import Home from './pages/Home.tsx';
-import MyRoot from './pages/MyRoot.tsx';
 import Trash from './pages/Trash.tsx';
 import DirectoryDetail from './pages/DirectoryDetail.tsx';
 
@@ -16,8 +15,7 @@ const router = createBrowserRouter([
     errorElement: <NotFound />,
     children: [
       { index: true, path: '/', element: <Home /> },
-      { path: '/drive/root', element: <MyRoot /> },
-      { path: '/drive/dirs/*', element: <DirectoryDetail /> },
+      { path: '/drive/dirs/:id', element: <DirectoryDetail /> },
       { path: '/trash', element: <Trash /> },
     ],
   },

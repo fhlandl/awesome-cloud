@@ -1,12 +1,12 @@
 import React from 'react';
 import TreeView from './TreeView';
 import SNBItemContent from './SNBItemContent';
-import { INodeType } from '../../../types/TreeViewTypes';
+import { IStorageNode } from '../../../types/StorageTypes';
 
 export interface ISNBItemProps {
   title: string;
   location: string;
-  treeRoot?: INodeType;
+  treeRoot?: IStorageNode;
 }
 
 const TreeViewContent = (props: ISNBItemProps) => {

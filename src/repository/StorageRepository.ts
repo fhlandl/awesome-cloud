@@ -1,9 +1,9 @@
 import axios, { AxiosInstance } from 'axios';
 import { SERVER_URL } from '../config/url';
-import { IStorageDBRecord } from '../types/StorageTypes';
+import { IStorageNodeRecord } from '../types/StorageTypes';
 
 interface IFetchDataOutput {
-  fileSystem: IStorageDBRecord[];
+  fileSystem: IStorageNodeRecord[];
 }
 
 class StorageRepository {
