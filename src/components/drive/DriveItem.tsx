@@ -3,7 +3,7 @@ import { IStorageNode } from '../../types/StorageTypes';
 import StorageIcon from '../ui/StorageIcon';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import styles from './DriveItem.module.scss';
-import ContextMenu from '../context-menu/ContextMenu';
+import { createPortal } from 'react-dom';
 
 interface IProps {
   node: IStorageNode;
@@ -11,18 +11,21 @@ interface IProps {
 
 const DriveItem = ({ node }: IProps) => {
   const { id, name, dType, userName, lastModifiedAt } = node;
-  const [menuPosition, setMenuPosition] = useState<{
-    x: number;
-    y: number;
-  } | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
+  const [menuPosition, setMenuPosition] = useState<{
+    top: number;
+    right: number;
+  }>({ top: 0, right: 0 });
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleOutsideClick = (e: Event) => {
-      console.log(e.target);
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        handleCloseMenu();
+      if (
+        isMenuOpen &&
+        ref.current &&
+        !ref.current.contains(e.target as Node)
+      ) {
+        setIsMenuOpen(false);
       }
     };
 
@@ -30,26 +33,17 @@ const DriveItem = ({ node }: IProps) => {
     return () => {
       document.removeEventListener('click', handleOutsideClick);
     };
-  }, []);
+  }, [isMenuOpen]);
 
-  const handleThreeDotClick = (e: React.MouseEvent) => {
-    // e.stopPropagation();
-    // e.preventDefault();
+  useEffect(() => {
+    if (ref.current) {
+      const { top, right } = ref.current.getBoundingClientRect();
+      setMenuPosition({ top, right });
+    }
+  }, [ref]);
+
+  const handleThreeDotClick = () => {
     setIsMenuOpen(!isMenuOpen);
-    // setMenuPosition({ x: e.clientX, y: e.clientY });
-    // if (menuRef.current) {
-    //   const { top, left, width, height } =
-    //     menuRef.current.getBoundingClientRect();
-    //   setMenuPosition({
-    //     x: 0,
-    //     y: top + height,
-    //   });
-    // }
-  };
-
-  const handleCloseMenu = () => {
-    setIsMenuOpen(false);
-    // setMenuPosition(null);
   };
 
   const ext = name.includes('.') ? name.split('.').reverse()[0] : undefined;
@@ -65,29 +59,19 @@ const DriveItem = ({ node }: IProps) => {
       <td>{lastModifiedAt}</td>
       <td>1MB</td>
       <td>
-        <div
-          className={styles.threeDot}
-          ref={menuRef}
-          onClick={handleThreeDotClick}
-        >
-          <BsThreeDotsVertical />
+        <div className={styles.contextMenu} ref={ref}>
+          <div className={styles.threeDot} onClick={handleThreeDotClick}>
+            <BsThreeDotsVertical />
+          </div>
+          {isMenuOpen &&
+            createPortal(
+              <ul className={styles.menuItems} style={menuPosition}>
+                <li onClick={() => console.log('다운로드')}>다운로드</li>
+                <li onClick={() => console.log('이름 바꾸기')}>이름 바꾸기</li>
+              </ul>,
+              document.body
+            )}
         </div>
-        {isMenuOpen && (
-          <ContextMenu
-            // position={menuPosition}
-            options={[
-              {
-                label: 'aaaaaaaa',
-                onClick: () => console.log('aaaaaaaa clicked'),
-              },
-              {
-                label: 'bbbbbbbb',
-                onClick: () => console.log('bbbbbbbb clicked'),
-              },
-            ]}
-            onClose={handleCloseMenu}
-          />
-        )}
       </td>
     </tr>
   );

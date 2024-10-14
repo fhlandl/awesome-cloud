@@ -11,8 +11,11 @@
   }
 }
 
-.threeDot {
+.contextMenu {
   position: relative;
+}
+
+.threeDot {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -23,5 +26,24 @@
 
   &:hover {
     background-color: #c9c6c6;
+  }
+}
+
+.menuItems {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  background-color: #6a9c89;
+  width: 100px;
+  text-align: left;
+  list-style: none;
+
+  li {
+    padding: 5px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #424141;
+    }
   }
 }
