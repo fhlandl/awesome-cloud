@@ -5,7 +5,7 @@ import { observer } from 'mobx-react-lite';
 import styles from './DirectoryDetail.module.scss';
 import StorageIcon from '../components/ui/StorageIcon';
 
-const DirectoryDetail = () => {
+const Drive = () => {
   const { pathname } = useLocation();
 
   const { cloudStorage } = useFileSystemContext();
@@ -62,4 +62,4 @@ const DirectoryDetail = () => {
   );
 };
 
-export default observer(DirectoryDetail);
+export default observer(Drive);
