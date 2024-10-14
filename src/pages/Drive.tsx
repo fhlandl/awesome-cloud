@@ -2,8 +2,10 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 import useFileSystemContext from '../context/useFileSystemContext';
 import { observer } from 'mobx-react-lite';
-import styles from './Drive.module.scss';
 import DriveItem from '../components/drive/DriveItem';
+import { BsThreeDotsVertical } from 'react-icons/bs';
+import styles from './Drive.module.scss';
+import itemStyles from '../components/drive/DriveItem.module.scss';
 
 const Drive = () => {
   const { pathname } = useLocation();
@@ -31,6 +33,11 @@ const Drive = () => {
               <th className={styles.column_second}>소유자</th>
               <th className={styles.column_third}>마지막으로 수정한 날짜</th>
               <th className={styles.column_fourth}>파일 크기</th>
+              <th>
+                <div className={itemStyles.threeDot}>
+                  <BsThreeDotsVertical />
+                </div>
+              </th>
             </tr>
           </thead>
           <tbody>
