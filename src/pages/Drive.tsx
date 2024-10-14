@@ -2,7 +2,7 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 import useFileSystemContext from '../context/useFileSystemContext';
 import { observer } from 'mobx-react-lite';
-import styles from './DirectoryDetail.module.scss';
+import styles from './Drive.module.scss';
 import DriveItem from '../components/drive/DriveItem';
 
 const Drive = () => {
