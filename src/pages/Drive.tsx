@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import useFileSystemContext from '../context/useFileSystemContext';
 import { observer } from 'mobx-react-lite';
 import styles from './DirectoryDetail.module.scss';
-import StorageIcon from '../components/ui/StorageIcon';
+import DriveItem from '../components/drive/DriveItem';
 
 const Drive = () => {
   const { pathname } = useLocation();
@@ -35,24 +35,8 @@ const Drive = () => {
           </thead>
           <tbody>
             {node?.children.map((child) => {
-              const ext = child.name.includes('.')
-                ? child.name.split('.').reverse()[0]
-                : undefined;
               return (
-                <tr
-                  key={`directory-detail-${nodeId}-${child.id}`}
-                  className={styles.dataRow}
-                >
-                  <td>
-                    <div className={styles.nameArea}>
-                      <StorageIcon dType={child.dType} ext={ext} />
-                      <span>{child.name}</span>
-                    </div>
-                  </td>
-                  <td>{child.userName}</td>
-                  <td>{child.lastModifiedAt}</td>
-                  <td>1MB</td>
-                </tr>
+                <DriveItem key={`drive-${nodeId}-${child.id}`} node={child} />
               );
             })}
           </tbody>
