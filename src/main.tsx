@@ -7,22 +7,36 @@ import NotFound from './pages/NotFound.tsx';
 import Home from './pages/Home.tsx';
 import Trash from './pages/Trash.tsx';
 import Drive from './pages/Drive.tsx';
+import Login from './pages/Login.tsx';
+import ProtectedRoute from './pages/ProtectedRoute.tsx';
+import { AuthContextProvider } from './context/AuthContext.tsx';
 
 const router = createBrowserRouter([
   {
-    path: '/',
-    element: <App />,
-    errorElement: <NotFound />,
+    path: '/login',
+    element: <Login />,
+  },
+  {
+    element: <ProtectedRoute />,
     children: [
-      { index: true, path: '/', element: <Home /> },
-      { path: '/drive/dirs/:id', element: <Drive /> },
-      { path: '/trash', element: <Trash /> },
+      {
+        path: '/',
+        element: <App />,
+        errorElement: <NotFound />,
+        children: [
+          { index: true, path: '/', element: <Home /> },
+          { path: '/drive/dirs/:id', element: <Drive /> },
+          { path: '/trash', element: <Trash /> },
+        ],
+      },
     ],
   },
 ]);
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <AuthContextProvider>
+      <RouterProvider router={router} />
+    </AuthContextProvider>
   </StrictMode>
 );
