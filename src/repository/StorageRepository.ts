@@ -1,24 +1,17 @@
-import axios, { AxiosInstance } from 'axios';
-import { SERVER_URL } from '../config/url';
 import { IStorageNodeRecord, StorageNodeId } from '../types/StorageTypes';
+import Repository from './Repository';
 
 interface IFetchDataOutput {
   fileSystem: IStorageNodeRecord[];
 }
 
-class StorageRepository {
-  private client: AxiosInstance;
-
-  constructor() {
-    this.client = axios.create({
-      baseURL: SERVER_URL,
-    });
-  }
-
+class StorageRepository extends Repository {
   public async fetchData(): Promise<IFetchDataOutput> {
-    return this.client.get('storage/file-system').then((res) => {
-      return res.data;
-    });
+    return this.client
+      .get('storage/file-system', { withCredentials: true })
+      .then((res) => {
+        return res.data;
+      });
   }
 
   public async downloadFile(nodeId: StorageNodeId): Promise<Blob> {

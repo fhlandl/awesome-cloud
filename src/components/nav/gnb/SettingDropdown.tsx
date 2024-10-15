@@ -1,10 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { IoIosSettings } from 'react-icons/io';
 import styles from './SettingDropdown.module.scss';
+import useAuthContext from '../../../context/useAuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const SettingDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const { logout } = useAuthContext();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleOutsideClick = (e: Event) => {
@@ -24,8 +29,9 @@ const SettingDropdown = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleItem1Clicked = () => {
-    console.log('item 1 clicked');
+  const handleItem1Clicked = async () => {
+    await logout();
+    navigate('/', { replace: true });
   };
 
   const handleItem2Clicked = () => {
@@ -43,7 +49,7 @@ const SettingDropdown = () => {
       </div>
       {isOpen && (
         <ul className={styles.dropdown_menu}>
-          <li onClick={handleItem1Clicked}>item 1</li>
+          <li onClick={handleItem1Clicked}>로그아웃</li>
           <li onClick={handleItem2Clicked}>item 2</li>
           <li onClick={handleItem3Clicked}>item 3</li>
         </ul>
