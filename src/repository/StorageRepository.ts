@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
 import { SERVER_URL } from '../config/url';
-import { IStorageNodeRecord } from '../types/StorageTypes';
+import { IStorageNodeRecord, StorageNodeId } from '../types/StorageTypes';
 
 interface IFetchDataOutput {
   fileSystem: IStorageNodeRecord[];
@@ -19,6 +19,14 @@ class StorageRepository {
     return this.client.get('storage/file-system').then((res) => {
       return res.data;
     });
+  }
+
+  public async downloadFile(nodeId: StorageNodeId): Promise<Blob> {
+    return this.client
+      .get(`storage/download/${nodeId}`, { responseType: 'blob' })
+      .then((res) => {
+        return new Blob([res.data]);
+      });
   }
 }
 

@@ -114,3 +114,16 @@ export function printTreeNode<NodeId, NodeType extends ITreeNode<NodeId>>(
     printTreeNode(child, depth + 1);
   });
 }
+
+export function downloadBlobAsFile(fileName: string, blob: Blob): void {
+  try {
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', fileName);
+    link.click();
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error('File Download Error', error);
+  }
+}

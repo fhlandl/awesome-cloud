@@ -2,10 +2,12 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 import useFileSystemContext from '../context/useFileSystemContext';
 import { observer } from 'mobx-react-lite';
-import styles from './DirectoryDetail.module.scss';
-import StorageIcon from '../components/ui/StorageIcon';
+import DriveItem from '../components/drive/DriveItem';
+import { BsThreeDotsVertical } from 'react-icons/bs';
+import styles from './Drive.module.scss';
+import itemStyles from '../components/drive/DriveItem.module.scss';
 
-const DirectoryDetail = () => {
+const Drive = () => {
   const { pathname } = useLocation();
 
   const { cloudStorage } = useFileSystemContext();
@@ -31,28 +33,17 @@ const DirectoryDetail = () => {
               <th className={styles.column_second}>소유자</th>
               <th className={styles.column_third}>마지막으로 수정한 날짜</th>
               <th className={styles.column_fourth}>파일 크기</th>
+              <th>
+                <div className={itemStyles.threeDot}>
+                  <BsThreeDotsVertical />
+                </div>
+              </th>
             </tr>
           </thead>
           <tbody>
             {node?.children.map((child) => {
-              const ext = child.name.includes('.')
-                ? child.name.split('.').reverse()[0]
-                : undefined;
               return (
-                <tr
-                  key={`directory-detail-${nodeId}-${child.id}`}
-                  className={styles.dataRow}
-                >
-                  <td>
-                    <div className={styles.nameArea}>
-                      <StorageIcon dType={child.dType} ext={ext} />
-                      <span>{child.name}</span>
-                    </div>
-                  </td>
-                  <td>{child.userName}</td>
-                  <td>{child.lastModifiedAt}</td>
-                  <td>1MB</td>
-                </tr>
+                <DriveItem key={`drive-${nodeId}-${child.id}`} node={child} />
               );
             })}
           </tbody>
@@ -62,4 +53,4 @@ const DirectoryDetail = () => {
   );
 };
 
-export default observer(DirectoryDetail);
+export default observer(Drive);

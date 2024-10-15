@@ -1,0 +1,30 @@
+.nameArea {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dataRow {
+  &:hover {
+    background-color: #424141;
+    opacity: 0.7;
+  }
+}
+
+.contextMenu {
+  position: relative;
+}
+
+.threeDot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #c9c6c6;
+  }
+}
