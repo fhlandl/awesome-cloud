@@ -10,11 +10,16 @@ import Drive from './pages/Drive.tsx';
 import Login from './pages/Login.tsx';
 import ProtectedRoute from './pages/ProtectedRoute.tsx';
 import { AuthContextProvider } from './context/AuthContext.tsx';
+import SignUp from './pages/SignUp.tsx';
 
 const router = createBrowserRouter([
   {
     path: '/login',
     element: <Login />,
+  },
+  {
+    path: '/signup',
+    element: <SignUp />,
   },
   {
     element: <ProtectedRoute />,
