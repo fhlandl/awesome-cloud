@@ -1,18 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import useAuthContext from '../context/useAuthContext';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 
 const Login = () => {
-  const { login } = useAuthContext();
+  const { isAuthenticated, login } = useAuthContext();
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || '/';
 
-  const handleLoginClick = (e: React.FormEvent) => {
+  const [loginId, setLoginId] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLoginClick = async (e: React.FormEvent) => {
     e.preventDefault();
-    login();
+    await login({ loginId, password });
     navigate(from, { replace: true });
   };
+
+  if (isAuthenticated) {
+    return <Navigate to="/" state={{ from: location }} replace />;
+  }
 
   return (
     <section>
@@ -20,12 +27,21 @@ const Login = () => {
       <div>
         <form onSubmit={handleLoginClick}>
           <div>
-            <label htmlFor="loginId">아이디</label>
-            <input type="text" id="loginId" />
+            <input
+              type="text"
+              id="loginId"
+              placeholder="아이디"
+              onChange={(e) => setLoginId(e.target.value)}
+            />
           </div>
           <div>
-            <label htmlFor="loginPassword">비밀번호</label>
-            <input type="password" id="loginPassword" autoComplete="off" />
+            <input
+              type="password"
+              id="loginPassword"
+              autoComplete="off"
+              placeholder="비밀번호"
+              onChange={(e) => setPassword(e.target.value)}
+            />
           </div>
           <div>
             <button type="submit">로그인</button>

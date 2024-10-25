@@ -11,9 +11,9 @@ const SignUp = () => {
   const [loginId, setLoginId] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSignUpClick = (e: React.FormEvent) => {
+  const handleSignUpClick = async (e: React.FormEvent) => {
     e.preventDefault();
-    signup({ loginId, password });
+    await signup({ loginId, password });
     navigate(from, { replace: true });
   };
 
