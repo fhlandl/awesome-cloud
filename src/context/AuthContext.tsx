@@ -12,7 +12,7 @@ interface IProps {
 interface IAuthContextProps {
   isAuthenticated: boolean;
   login: (dto: ILoginRequest) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
   signup: (dto: ISignUpRequest) => Promise<void>;
 }
 
@@ -48,8 +48,13 @@ export const AuthContextProvider = (props: IProps) => {
     }
   };
 
-  const logout = () => {
-    setIsAuthenticated(false);
+  const logout = async () => {
+    try {
+      await userRepository.logout();
+      setIsAuthenticated(false);
+    } catch (e) {
+      console.error('Logout Failed');
+    }
   };
 
   const signup = async (dto: ISignUpRequest) => {

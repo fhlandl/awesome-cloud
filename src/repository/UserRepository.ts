@@ -24,6 +24,14 @@ class UserRepository extends Repository {
         console.log(res.data);
       });
   }
+
+  public async logout(): Promise<void> {
+    return this.client
+      .post('/user/logout', { withCredentials: true })
+      .then((res) => {
+        console.log(res.data);
+      });
+  }
 }
 
 export default UserRepository;
