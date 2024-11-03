@@ -3,6 +3,7 @@ import Repository from './Repository';
 export interface ISignUpRequest {
   loginId: string;
   password: string;
+  name: string;
 }
 
 export interface ILoginRequest {
@@ -27,7 +28,7 @@ class UserRepository extends Repository {
 
   public async logout(): Promise<void> {
     return this.client
-      .post('/user/logout', { withCredentials: true })
+      .post('/user/logout', {}, { withCredentials: true })
       .then((res) => {
         console.log(res.data);
       });

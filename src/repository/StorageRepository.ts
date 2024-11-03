@@ -7,9 +7,11 @@ interface IFetchDataOutput {
 
 class StorageRepository extends Repository {
   public async fetchData(): Promise<IFetchDataOutput> {
-    return this.client.get('storage/file-system').then((res) => {
-      return res.data;
-    });
+    return this.client
+      .get('storage/file-system', { withCredentials: true })
+      .then((res) => {
+        return res.data;
+      });
   }
 
   public async downloadFile(nodeId: StorageNodeId): Promise<Blob> {

@@ -33,6 +33,7 @@ export const AuthContextProvider = (props: IProps) => {
         await authRepository.checkAuth();
         setIsAuthenticated(true);
       } catch (e) {
+        console.log('Not authorized');
         setIsAuthenticated(false);
       }
     };
@@ -45,6 +46,7 @@ export const AuthContextProvider = (props: IProps) => {
       setIsAuthenticated(true);
     } catch (e) {
       console.error('Login Failed');
+      throw e;
     }
   };
 
@@ -54,6 +56,7 @@ export const AuthContextProvider = (props: IProps) => {
       setIsAuthenticated(false);
     } catch (e) {
       console.error('Logout Failed');
+      throw e;
     }
   };
 
@@ -62,6 +65,7 @@ export const AuthContextProvider = (props: IProps) => {
       await userRepository.signup(dto);
     } catch (e) {
       console.error('Sign Up Failed');
+      throw e;
     }
   };
 

@@ -10,11 +10,24 @@ const SignUp = () => {
 
   const [loginId, setLoginId] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordCheck, setPasswordCheck] = useState('');
+  const [name, setName] = useState('');
 
   const handleSignUpClick = async (e: React.FormEvent) => {
     e.preventDefault();
-    await signup({ loginId, password });
-    navigate(from, { replace: true });
+    try {
+      checkPassword();
+      await signup({ loginId, password, name });
+      navigate(from, { replace: true });
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const checkPassword = () => {
+    if (password !== passwordCheck) {
+      throw Error('Password Input Error');
+    }
   };
 
   return (
@@ -48,11 +61,17 @@ const SignUp = () => {
               id="signup_password_check"
               autoComplete="off"
               placeholder="비밀번호 확인"
+              onChange={(e) => setPasswordCheck(e.target.value)}
             />
           </div>
           <div>
             {/* <label htmlFor="signup_name">이름</label> */}
-            <input type="text" id="signup_name" placeholder="이름" />
+            <input
+              type="text"
+              id="signup_name"
+              placeholder="이름"
+              onChange={(e) => setName(e.target.value)}
+            />
           </div>
           <div>
             {/* <label htmlFor="signup_mail">이메일</label> */}
