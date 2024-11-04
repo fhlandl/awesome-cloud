@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import SpreadButton from '../../ui/SpreadButton';
 import SNBItemContent from './SNBItemContent';
 import styles from './TreeView.module.scss';
-import { StorageNodeId } from '../../../types/StorageTypes';
+import { DIR_URL, StorageNodeId } from '../../../types/StorageTypes';
 import { IStorageNode } from '../../../types/StorageTypes';
 
 interface INodeProps {
@@ -16,14 +16,12 @@ interface ITreeViewProps {
   root: IStorageNode;
 }
 
-const DIR_PATH = '/drive/dirs';
-
 const TreeNode = (props: INodeProps) => {
   const { node, depth, expandedNodes, toggleNode } = props;
   const isFile = node.dType === 'F';
   if (isFile) return <></>;
 
-  const location = `${DIR_PATH}/${node.id}`;
+  const location = `${DIR_URL}/${node.id}`;
   const expanded = expandedNodes.has(node.id);
 
   const indent = depth - 1;

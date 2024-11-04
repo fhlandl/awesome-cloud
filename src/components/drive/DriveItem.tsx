@@ -1,5 +1,5 @@
 import React from 'react';
-import { IStorageNode } from '../../types/StorageTypes';
+import { DIR_URL, IStorageNode } from '../../types/StorageTypes';
 import StorageIcon from '../ui/StorageIcon';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import useContextMenu from '../../hooks/context-menu/useContextMenu';
@@ -7,6 +7,7 @@ import styles from './DriveItem.module.scss';
 import ContextMenu from '../context-menu/ContextMenu';
 import useStorageRepository from '../../context/useStorageRepository';
 import { downloadBlobAsFile } from '../../util/StorageUtil';
+import { useNavigate } from 'react-router-dom';
 
 interface IProps {
   node: IStorageNode;
@@ -19,6 +20,8 @@ const DriveItem = ({ node }: IProps) => {
   });
 
   const { storageRepository } = useStorageRepository();
+
+  const navigate = useNavigate();
 
   const handleThreeDotClick = () => {
     handleTriggerClick();
@@ -33,6 +36,12 @@ const DriveItem = ({ node }: IProps) => {
     downloadBlobAsFile(name, blob);
   };
 
+  const handleDirectoryClick = () => {
+    if (dType === 'D') {
+      navigate(`${DIR_URL}/${id}`);
+    }
+  };
+
   const ext = name.includes('.') ? name.split('.').reverse()[0] : undefined;
   const menuOptions = [
     { label: '다운로드', onClick: handleFileDownloadClick },
@@ -42,7 +51,7 @@ const DriveItem = ({ node }: IProps) => {
   return (
     <tr className={styles.dataRow}>
       <td>
-        <div className={styles.nameArea}>
+        <div className={styles.nameArea} onClick={handleDirectoryClick}>
           <StorageIcon dType={dType} ext={ext} />
           <span>{name}</span>
         </div>

@@ -7,6 +7,8 @@ export const ROOT_ID: StorageNodeId = -1;
 
 export const ROOT_NAME = 'root';
 
+export const DIR_URL = '/drive/dirs';
+
 export interface IStorageNodeRecord extends ITreeNodeRecord<StorageNodeId> {
   dType: string;
   userId?: number;
