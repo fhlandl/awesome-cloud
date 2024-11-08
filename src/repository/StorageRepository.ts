@@ -5,6 +5,10 @@ interface IFetchDataOutput {
   fileSystem: IStorageNodeRecord[];
 }
 
+interface IDeleteInput {
+  id: number;
+}
+
 class StorageRepository extends Repository {
   public async fetchData(): Promise<IFetchDataOutput> {
     return this.client
@@ -19,6 +23,14 @@ class StorageRepository extends Repository {
       .get(`storage/download/${nodeId}`, { responseType: 'blob' })
       .then((res) => {
         return new Blob([res.data]);
+      });
+  }
+
+  public async delete(dto: IDeleteInput): Promise<void> {
+    return this.client
+      .post(`storage/delete`, dto, { withCredentials: true })
+      .then((res) => {
+        console.log(res.data);
       });
   }
 }

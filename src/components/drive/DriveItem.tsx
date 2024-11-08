@@ -8,6 +8,7 @@ import ContextMenu from '../context-menu/ContextMenu';
 import useStorageRepository from '../../context/useStorageRepository';
 import { downloadBlobAsFile } from '../../util/StorageUtil';
 import { useNavigate } from 'react-router-dom';
+import useFileSystemContext from '../../context/useFileSystemContext';
 
 interface IProps {
   node: IStorageNode;
@@ -20,6 +21,7 @@ const DriveItem = ({ node }: IProps) => {
   });
 
   const { storageRepository } = useStorageRepository();
+  const { fetchData } = useFileSystemContext();
 
   const navigate = useNavigate();
 
@@ -42,10 +44,16 @@ const DriveItem = ({ node }: IProps) => {
     }
   };
 
+  const handleDeleteClick = async () => {
+    await storageRepository.delete({ id });
+    await fetchData();
+  };
+
   const ext = name.includes('.') ? name.split('.').reverse()[0] : undefined;
   const menuOptions = [
     { label: '다운로드', onClick: handleFileDownloadClick },
     { label: '이름 바꾸기', onClick: () => console.log('이름 바꾸기') },
+    { label: '삭제', onClick: handleDeleteClick },
   ];
 
   return (

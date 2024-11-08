@@ -10,6 +10,7 @@ interface IProps {
 
 interface IFileSystemContextProps {
   cloudStorage: CloudStorage;
+  fetchData: () => Promise<void>;
 }
 
 export const FileSystemContext = createContext<IFileSystemContextProps>(
@@ -22,20 +23,24 @@ export const FileSystemProvider = (props: IProps) => {
   const { children } = props;
   const { storageRepository } = useStorageRepository();
 
-  useEffect(() => {
-    const fetchData = async () => {
+  const fetchData = async () => {
+    try {
       console.log('fetching...');
       const { fileSystem } = await storageRepository.fetchData();
       const root = convertDBRecordsToTreeNode(fileSystem) as IStorageNode;
       cloudStorage.update(root);
       console.log('fetched...');
-    };
+    } catch (e) {
+      console.error('Data fetching failed');
+    }
+  };
 
+  useEffect(() => {
     fetchData();
   }, [storageRepository]);
 
   return (
-    <FileSystemContext.Provider value={{ cloudStorage }}>
+    <FileSystemContext.Provider value={{ cloudStorage, fetchData }}>
       {children}
     </FileSystemContext.Provider>
   );
